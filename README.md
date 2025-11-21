@@ -33,26 +33,6 @@ Built-in Before/After slider with automatic resolution matching.
 
 ---
 
-## 📸 Visual Showcase
-
-### Original → Neural Image Restore (4×)
-#### Face Restoration  
-<img src="docs/demo_face_before.jpg" width="100%" alt="Before Face"/>
-<img src="docs/demo_face_after.jpg" width="100%" alt="After Face"/>
-
----
-
-#### Text & Detail Enhancement  
-<img src="docs/demo_text_before.jpg" width="100%" alt="Before Text"/>
-<img src="docs/demo_text_after.jpg" width="100%" alt="After Text"/>
-
-_Noise removed • Details hallucinated • Text sharpened • Faces restored_
-
-> **Note:** The preview images are compressed for GitHub.  
-> Actual outputs are crisp PNG/JPG depending on configuration.
-
----
-
 ## 📊 Quality Metrics
 
 The model consistently demonstrates **>0.9 SSIM**, meaning restored details remain faithful to the subject without altering identity.
