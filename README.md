@@ -162,6 +162,41 @@ docker compose up -d
 
 ---
 
+## ⚡ Deployment (Serverless Modal)
+
+Recommended for high-scale, GPU-on-demand usage without managing servers.
+
+### 1. Setup
+```bash
+pip install modal
+modal setup
+```
+
+### 2. Deploy
+```bash
+modal deploy modal_app.py
+```
+*   Configures persistent storage.
+*   Auto-scales GPU containers.
+
+---
+
+## 💸 Modal.com Cost & Performance
+
+We benchmarked the cost of running this release on Modal's serverless GPUs.
+
+| GPU | Speed | Cost/Image (~90KB) | Images per $1 |
+| :--- | :--- | :--- | :--- |
+| **A10G** | Fast (~2s) | $0.0006 | **~1,660** |
+| **T4** | Slow (~4s) | $0.0006 | **~1,600** |
+
+**Key Insight**: GPU choice affects speed (Latency), but cost per image remains similar.
+
+*   **Tip**: Use **A10G** for user-facing apps.
+*   **Tip**: Use **T4** for background jobs.
+
+---
+
 ## ⚠️ Troubleshooting
 
 ### ❌ CUDA Out of Memory

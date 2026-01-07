@@ -215,3 +215,55 @@ Run `evaluate.py` to generate a quality report comparing original vs. restored i
 ### Server Crash on VPS
 *   **Cause**: System ran out of RAM.
 *   **Fix**: Enable Swap or restrict Docker memory using `deploy.resources.limits.memory` in `docker-compose.yml`.
+
+---
+
+## 9. AI Image Restoration Cost & Performance Analysis (Modal.com)
+
+**(GFPGAN on Modal GPU Infrastructure)**
+
+### 1. Purpose of This Analysis
+This section analyzes the **performance** and **cost** of running the restoration engine on Modal.com's serverless GPU infrastructure. The goal is to provide **transparent, defensible numbers** for planning and budgeting.
+
+### 2. Experimental Setup
+*   **Model**: GFPGAN (face restoration) + Real-ESRGAN
+*   **Infrastructure**: Modal.com (Serverless GPU)
+*   **GPU Types**: A10G (Performance) vs T4 (Budget)
+*   **Workload**: Single-image inference (No batching)
+
+### 3. Measured Performance
+Timings represent **end-to-end inference time** (including overhead).
+
+| Image Size | Processing Time (A10G) | Processing Time (T4 Est.) |
+| :--- | :--- | :--- |
+| **~90 KB** | ~2 seconds | ~3–4 seconds |
+| **~276 KB** | ~7 seconds | ~10–14 seconds |
+
+*   **A10G** is approx **1.5x - 2x faster** than T4.
+
+### 4. Cost Analysis
+Modal GPU pricing (approximate):
+*   **T4**: ~$0.00018 / sec
+*   **A10G**: ~$0.00030 / sec
+
+#### Cost Per Image & Throughput ($1 Budget)
+
+| GPU | Image Size | Cost per Image | Images per $1 |
+| :--- | :--- | :--- | :--- |
+| **A10G** | Small (~90KB) | $0.0006 | **~1,660** |
+| **A10G** | Medium (~276KB) | $0.0021 | **~470** |
+| **T4** | Small (~90KB) | ~$0.0006 | **~1,390 - 1,850** |
+| **T4** | Medium (~276KB) | ~$0.0022 | **~400 - 550** |
+
+### 5. Key Insights
+> **Despite speed differences, T4 and A10G result in similar cost per image.**
+
+*   **T4**: Cheaper per second, but slower (burns more seconds).
+*   **A10G**: More expensive per second, but faster (burns fewer seconds).
+*   **Conclusion**: GPU choice affects **latency** (user experience), not drastically the **cost**.
+
+### 6. Recommendations
+1.  **User-Facing (API)**: Use **A10G** for lowest latency.
+2.  **Background Jobs**: Use **T4** if available, mainly to save high-end GPUs for others, though cost is similar.
+3.  **Budgeting**: Plan for **~400 - 1,200 images per $1** depending on image size mix.
+
