@@ -31,8 +31,9 @@ MAX_FILE_SIZE_MB = int(os.getenv("MAX_FILE_SIZE_MB", 10))
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
 
 # 3. STORAGE
-UPLOAD_FOLDER = "temp_uploads"
-PROCESSED_FOLDER = "processed_images"
+# 3. STORAGE
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "temp_uploads")
+PROCESSED_FOLDER = os.getenv("PROCESSED_FOLDER", "processed_images")
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -47,7 +48,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.responses import FileResponse
+
 app.mount("/processed", StaticFiles(directory=PROCESSED_FOLDER), name="processed")
+# Serve other static assets if any exist (e.g., css/js referenced by index.html)
+# app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+@app.get("/")
+async def serve_dashboard():
+    static_dir = os.path.join(os.path.dirname(__file__), "static")
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {"message": "Dashboard not found"}
 
 # --- GLOBAL VARIABLES ---
 restorer = None
